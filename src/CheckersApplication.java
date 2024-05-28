@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import agents.AI;
 import agents.Minimax;
+import agents.MinimaxAlphaBeta;
 import cherckers.Board;
 import cherckers.Constants;
 import cherckers.Game;
@@ -9,8 +10,8 @@ import cherckers.Game;
 public class CheckersApplication {
     private JFrame frame;
     private Game game;
-    private AI blackAI = new Minimax(Constants.BLACK, 5);
-    private AI redAI = new Minimax(Constants.RED, 4);
+    private AI blackAI = new MinimaxAlphaBeta(Constants.BLACK, 5);
+    private AI redAI = new Minimax(Constants.RED, 1);
     private final JPanel panel = new JPanel(new GridLayout(Constants.ROWS, Constants.COLS));
 
     public CheckersApplication() {

@@ -5,24 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee2fbfa2-2ec6-40ed-8526-a9d72229c076" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/CheckersJavaSwing.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/CheckersApplication.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/agents/AI.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/agents/EvaluationResult.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/agents/Minimax.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cherckers/Board.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cherckers/Constants.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cherckers/Game.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cherckers/King.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cherckers/Pawn.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cherckers/Piece.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/cherckers/Tile.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/agents/MinimaxAlphaBeta.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CheckersApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CheckersApplication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +71,7 @@
       <workItem from="1716647495088" duration="17093000" />
       <workItem from="1716669985463" duration="5253000" />
       <workItem from="1716819280414" duration="6498000" />
-      <workItem from="1716914728183" duration="5953000" />
+      <workItem from="1716914728183" duration="6589000" />
     </task>
     <servers />
   </component>
