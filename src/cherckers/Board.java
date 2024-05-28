@@ -156,8 +156,18 @@ public class Board implements Cloneable {
      * Evaluate the board
      */
     public int evaluate(String color) {
+        String winner = getWinner();
+
+        if (winner != null) {
+            if (winner.equals(color)) {
+                return 1000;
+            } else {
+                return -1000;
+            }
+        }
+
         if (color.equals(Constants.RED)) {
-            return (this.redLeft - this.blackLeft) * 2 + (this.redKings - this.blackKings) * 5;
+            return (this.redLeft - this.blackLeft) * 2 + (this.redKings - this.blackKings) * 5 + 1000;
         }
         return (this.blackLeft - this.redLeft) * 2 + (this.blackKings - this.redKings) * 5;
     }

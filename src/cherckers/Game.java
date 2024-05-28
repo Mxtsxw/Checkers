@@ -162,7 +162,6 @@ public class Game {
 
     public void aiMove(Board newBoard) {
         board = newBoard;
-        resetClickEvent();
         selected = null;
         validMoves = null;
         validJumps = null;

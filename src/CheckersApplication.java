@@ -27,6 +27,9 @@ public class CheckersApplication {
         frame.add(panel);
         frame.setVisible(true);
 
+        // Prevent click
+        game.disableClickEvent();
+
         // Display the game
         game.update();
         updateBoardPanel();
