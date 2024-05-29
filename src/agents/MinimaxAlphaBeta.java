@@ -26,7 +26,6 @@ public class MinimaxAlphaBeta implements AI {
     public EvaluationResult playerMAX(Board state, int depth, double alpha, double beta) {
         if (depth == 0 || state.isTerminal()) {
             int evaluate = state.evaluate(this.color);
-            System.out.println(evaluate + " " + state);
             return new EvaluationResult(evaluate, state);
         }
 
@@ -55,7 +54,6 @@ public class MinimaxAlphaBeta implements AI {
     public EvaluationResult playerMIN(Board state, int depth, double alpha, double beta) {
         if (depth == 0 || state.isTerminal()) {
             int evaluate = state.evaluate(this.color);
-            System.out.println(evaluate + " " + state);
             return new EvaluationResult(evaluate, state);
         }
 

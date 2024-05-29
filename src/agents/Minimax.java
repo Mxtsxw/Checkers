@@ -27,7 +27,6 @@ public class Minimax implements AI{
     public EvaluationResult playerMAX(Board state, int depth) {
         if (depth == 0 || state.isTerminal()) {
             int evaluate = state.evaluate(this.color);
-            System.out.println(evaluate + " " + state);
             return new EvaluationResult(evaluate, state);
         }
 
@@ -52,7 +51,6 @@ public class Minimax implements AI{
     public EvaluationResult playerMIN(Board state, int depth) {
         if (depth == 0 || state.isTerminal()) {
             int evaluate = state.evaluate(this.color);
-            System.out.println(evaluate + " " + state);
             return new EvaluationResult(evaluate, state);
         }
 
