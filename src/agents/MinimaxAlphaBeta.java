@@ -105,4 +105,9 @@ public class MinimaxAlphaBeta implements AI {
     public Map<String, Integer> getCriterias() {
         return this.criterias;
     }
+
+    @Override
+    public String toString() {
+        return "MinimaxAlphaBeta (" + depth + ") : " + criterias;
+    }
 }

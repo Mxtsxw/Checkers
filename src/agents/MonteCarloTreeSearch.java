@@ -85,5 +85,10 @@ public class MonteCarloTreeSearch implements AI {
     public Map<String, Integer> getCriterias() {
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "MCTS (" + computationalBudget + ")";
+    }
 }
 

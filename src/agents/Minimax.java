@@ -104,4 +104,9 @@ public class Minimax implements AI{
     public void setDepth(int depth) {
         this.depth = depth;
     }
+
+    @Override
+    public String toString() {
+        return "Minimax (" + depth + ") : " + criterias;
+    }
 }

@@ -24,11 +24,13 @@ public class GUI extends JPanel {
     public AI ai;
 
     Map<String, Integer> criterias;
+    int defaultDepth = 2;
+    int defaultIterations = 100;
 
     public GUI(AI ai) {
         this.ai = ai;
-        this.iterationsField = new JTextField(); iterationsField.setPreferredSize(new Dimension(50, 20));
-        this.depthField = new JTextField(); depthField.setPreferredSize(new Dimension(50, 20));
+        this.iterationsField = new JTextField(); iterationsField.setPreferredSize(new Dimension(50, 20)); iterationsField.setText(String.valueOf(defaultIterations));
+        this.depthField = new JTextField(); depthField.setPreferredSize(new Dimension(50, 20)); depthField.setText(String.valueOf(defaultDepth));
         this.playerSelector = new JComboBox<>(new String[]{"Human", "Minimax", "MinimaxAlphaBeta", "MCTS"});
         this.resetButton = new JButton("Reset");
         this.validateButton = new JButton("Validate");
@@ -112,6 +114,4 @@ public class GUI extends JPanel {
         this.revalidate();
         this.repaint();
     }
-
-
 }
