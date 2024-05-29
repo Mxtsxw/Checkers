@@ -6,16 +6,19 @@ import cherckers.Game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class MinimaxAlphaBeta implements AI {
     private int depth;
     private final String color;
     private final Random random = new Random();
+    private Map<String, Integer> criterias;
 
     public MinimaxAlphaBeta(String color, int depth) {
         this.color = color;
         this.depth = depth;
+        this.criterias = Map.of("Material", 2, "King", 5, "Eatable", -2, "Movable", 1, "Win", 1000);
     }
 
     public Board alphabeta(Board state) {
@@ -85,7 +88,21 @@ public class MinimaxAlphaBeta implements AI {
         return alphabeta(game.getBoard());
     }
 
+    @Override
+    public void update() {
+        // Do nothing
+    }
+
     public void setDepth(int depth) {
         this.depth = depth;
+    }
+
+    public void setCriterias(Map<String, Integer> criterias) {
+        this.criterias = criterias;
+    }
+
+    @Override
+    public Map<String, Integer> getCriterias() {
+        return this.criterias;
     }
 }

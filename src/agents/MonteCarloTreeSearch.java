@@ -4,6 +4,7 @@ import cherckers.Board;
 import cherckers.Game;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class MonteCarloTreeSearch implements AI {
@@ -55,7 +56,7 @@ public class MonteCarloTreeSearch implements AI {
             Board action = legalActions.get(ThreadLocalRandom.current().nextInt(legalActions.size()));
             state = action; // Current state is updated to the next state
         }
-        System.out.println("Terminal Node hit");
+//        System.out.println("Terminal Node hit");
         return evaluate(state); // Return the reward
     }
 
@@ -68,6 +69,21 @@ public class MonteCarloTreeSearch implements AI {
 
     public Board run(Game game) {
         return uctSearch(game.getBoard());
+    }
+
+    @Override
+    public void update() {
+        // Do nothing
+    }
+
+    @Override
+    public void setCriterias (Map<String, Integer> criterias) {
+        // Do nothing
+    }
+
+    @Override
+    public Map<String, Integer> getCriterias() {
+        return null;
     }
 }
 

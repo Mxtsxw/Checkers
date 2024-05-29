@@ -6,17 +6,26 @@ import cherckers.Game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class Minimax implements AI{
     private int depth;
     private final String color;
+    private Map<String, Integer> criterias;
 
     private final Random random = new Random();
 
     public Minimax(String color, int depth) {
         this.color = color;
         this.depth = depth;
+        this.criterias = Map.of(
+                "Material", 2,
+                "King", 5,
+                "Eatable", -2,
+                "Movable", 1,
+                "Win", 1000
+        );
     }
 
     public Board minimax(Board state) {
@@ -75,6 +84,21 @@ public class Minimax implements AI{
     @Override
     public Board run(Game game) {
         return minimax(game.getBoard());
+    }
+
+    @Override
+    public void update() {
+        // Do nothing
+    }
+
+    @Override
+    public void setCriterias(Map<String, Integer> criterias) {
+        this.criterias = criterias;
+    }
+
+    @Override
+    public Map<String, Integer> getCriterias(){
+        return this.criterias;
     }
 
     public void setDepth(int depth) {
