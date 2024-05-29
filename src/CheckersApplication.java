@@ -24,7 +24,7 @@ public class CheckersApplication {
     private final Map<String, Integer> defaultCriterias = Map.of(
         "Material", 2,
         "King", 5,
-        "Eatable", -2,
+        "Eatable", 2,
         "Movable", 1,
         "Win", 1000
     );

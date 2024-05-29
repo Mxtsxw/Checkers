@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Board implements Cloneable {
     private Tile[][] board;
@@ -155,21 +156,39 @@ public class Board implements Cloneable {
     /**
      * Evaluate the board
      */
-    public int evaluate(String color) {
-        String winner = getWinner();
+    public int evaluate(String color, Map<String, Integer> criterias) {
 
-        if (winner != null) {
+        // Retrieve all weights with default
+        int materialWeight = criterias.getOrDefault("Material", 2);
+        int kingWeight = criterias.getOrDefault("King", 5);
+        int eatableWeight = criterias.getOrDefault("Eatable", 2);
+        int movableWeight = criterias.getOrDefault("Movable", 1);
+        int winWeight = criterias.getOrDefault("Win", 1000);
+
+        int res = 0;
+
+        if (isTerminal()) {
+            String winner = getWinner();
+
             if (winner.equals(color)) {
-                return 1000;
+                return winWeight;
             } else {
-                return -1000;
+                return -winWeight;
             }
         }
 
         if (color.equals(Constants.RED)) {
-            return (this.redLeft - this.blackLeft) * 2 + (this.redKings - this.blackKings) * 5 + 1000;
+            res += (this.redLeft - this.blackLeft) * materialWeight;
+            res += (this.redKings - this.blackKings) * kingWeight;
+            res += (getAllMoves(Constants.RED).size() - getAllMoves(Constants.BLACK).size()) * movableWeight;
+            res += (getAllJumps(Constants.RED).size() - getAllJumps(Constants.BLACK).size()) * eatableWeight;
+        } else if (color.equals(Constants.BLACK)) {
+            res += (this.blackLeft - this.redLeft) * materialWeight;
+            res += (this.blackKings - this.redKings) * kingWeight;
+            res += (getAllMoves(Constants.BLACK).size() - getAllMoves(Constants.RED).size()) * movableWeight;
+            res += (getAllJumps(Constants.BLACK).size() - getAllJumps(Constants.RED).size()) * eatableWeight;
         }
-        return (this.blackLeft - this.redLeft) * 2 + (this.blackKings - this.redKings) * 5;
+        return res;
     }
 
     /**
@@ -205,6 +224,22 @@ public class Board implements Cloneable {
             moves.addAll(getValidJumps(piece));
         }
         return moves;
+    }
+
+    public List<Integer[]> getAllSimpleMoves(String color) {
+        List<Integer[]> moves = new ArrayList<>();
+        for (Piece piece : getAllPieces(color)) {
+            moves.addAll(getValidMoves(piece));
+        }
+        return moves;
+    }
+
+    public List<Integer[]> getAllJumps(String color) {
+        List<Integer[]> jumps = new ArrayList<>();
+        for (Piece piece : getAllPieces(color)) {
+            jumps.addAll(getValidJumps(piece));
+        }
+        return jumps;
     }
 
     /**

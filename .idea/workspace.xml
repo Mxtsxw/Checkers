@@ -10,7 +10,8 @@
       <change beforePath="$PROJECT_DIR$/src/GUI/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/GUI.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/agents/Minimax.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/agents/Minimax.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/agents/MinimaxAlphaBeta.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/agents/MinimaxAlphaBeta.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/agents/MonteCarloTreeSearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/agents/MonteCarloTreeSearch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cherckers/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cherckers/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/cherckers/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cherckers/Game.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

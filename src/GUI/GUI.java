@@ -38,7 +38,7 @@ public class GUI extends JPanel {
         this.criterias = Map.of(
                 "Material", 2,
                 "King", 5,
-                "Eatable", -2,
+                "Eatable", 2,
                 "Movable", 1,
                 "Win", 1000
         );

@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class Game {
@@ -31,7 +32,6 @@ public class Game {
                         System.out.println("Tile clicked at: " + finalRow + ", " + finalCol + " " + Game.this.board.getBoard()[finalRow][finalCol].getOccupyingPiece());
                         Game.this.select(finalRow, finalCol);
                         // Handle the click event, e.g., move a piece
-                        System.out.println(Game.this.selected);
                         Game.this.update();
                     }
                 });
@@ -177,11 +177,11 @@ public class Game {
     }
 
     public int evaluate() {
-        return board.evaluate(turn);
+        return board.evaluate(turn, new HashMap<>());
     }
 
-    public int evaluate(String color) {
-        return board.evaluate(color);
+    public int evaluate(String color, HashMap<String, Integer> criterias) {
+        return board.evaluate(color, criterias);
     }
 
     public String getTurn() {

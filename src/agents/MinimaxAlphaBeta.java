@@ -18,7 +18,7 @@ public class MinimaxAlphaBeta implements AI {
     public MinimaxAlphaBeta(String color, int depth) {
         this.color = color;
         this.depth = depth;
-        this.criterias = Map.of("Material", 2, "King", 5, "Eatable", -2, "Movable", 1, "Win", 1000);
+        this.criterias = Map.of("Material", 2, "King", 5, "Eatable", 2, "Movable", 1, "Win", 1000);
     }
 
     public Board alphabeta(Board state) {
@@ -28,7 +28,7 @@ public class MinimaxAlphaBeta implements AI {
 
     public EvaluationResult playerMAX(Board state, int depth, double alpha, double beta) {
         if (depth == 0 || state.isTerminal()) {
-            int evaluate = state.evaluate(this.color);
+            int evaluate = state.evaluate(this.color, this.criterias);
             return new EvaluationResult(evaluate, state);
         }
 
@@ -56,7 +56,7 @@ public class MinimaxAlphaBeta implements AI {
 
     public EvaluationResult playerMIN(Board state, int depth, double alpha, double beta) {
         if (depth == 0 || state.isTerminal()) {
-            int evaluate = state.evaluate(this.color);
+            int evaluate = state.evaluate(this.color, this.criterias);
             return new EvaluationResult(evaluate, state);
         }
 
