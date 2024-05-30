@@ -16,6 +16,8 @@ public class Minimax implements AI{
 
     private final Random random = new Random();
 
+    public int nodeCounter;
+
     public Minimax(String color, int depth) {
         this.color = color;
         this.depth = depth;
@@ -29,11 +31,13 @@ public class Minimax implements AI{
     }
 
     public Board minimax(Board state) {
+        nodeCounter = 0;
         EvaluationResult result = playerMAX(state, depth);
         return result.getBoard();
     }
 
     public EvaluationResult playerMAX(Board state, int depth) {
+        nodeCounter++;
         if (depth == 0 || state.isTerminal()) {
             int evaluate = state.evaluate(this.color, this.criterias);
             return new EvaluationResult(evaluate, state);
@@ -58,6 +62,7 @@ public class Minimax implements AI{
     }
 
     public EvaluationResult playerMIN(Board state, int depth) {
+        nodeCounter++;
         if (depth == 0 || state.isTerminal()) {
             int evaluate = state.evaluate(this.color, this.criterias);
             return new EvaluationResult(evaluate, state);
@@ -81,10 +86,16 @@ public class Minimax implements AI{
         return new EvaluationResult(minEval, bestBoard);
     }
 
+    public void setNodeCounter(int nodeCounter) {
+        this.nodeCounter = nodeCounter;
+    }
+
     @Override
     public Board run(Game game) {
         System.out.println("Running Minimax (" + depth + ")" + " for " + color + " player" + " with " + criterias);
-        return minimax(game.getBoard());
+        Board res = minimax(game.getBoard());
+        System.out.println("Node created: " + nodeCounter);
+        return res;
     }
 
     @Override

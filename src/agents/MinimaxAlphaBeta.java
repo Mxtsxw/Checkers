@@ -14,6 +14,7 @@ public class MinimaxAlphaBeta implements AI {
     private final String color;
     private final Random random = new Random();
     private Map<String, Integer> criterias;
+    public int nodeCounter;
 
     public MinimaxAlphaBeta(String color, int depth) {
         this.color = color;
@@ -22,11 +23,13 @@ public class MinimaxAlphaBeta implements AI {
     }
 
     public Board alphabeta(Board state) {
+        nodeCounter = 0;
         EvaluationResult result = playerMAX(state, depth, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
         return result.getBoard();
     }
 
     public EvaluationResult playerMAX(Board state, int depth, double alpha, double beta) {
+        nodeCounter++;
         if (depth == 0 || state.isTerminal()) {
             int evaluate = state.evaluate(this.color, this.criterias);
             return new EvaluationResult(evaluate, state);
@@ -55,6 +58,7 @@ public class MinimaxAlphaBeta implements AI {
     }
 
     public EvaluationResult playerMIN(Board state, int depth, double alpha, double beta) {
+        nodeCounter++;
         if (depth == 0 || state.isTerminal()) {
             int evaluate = state.evaluate(this.color, this.criterias);
             return new EvaluationResult(evaluate, state);
@@ -86,7 +90,9 @@ public class MinimaxAlphaBeta implements AI {
     @Override
     public Board run(Game game) {
         System.out.println("Running MinimaxAlphaBeta (" + depth + ")" + " for " + color + " player" + " with " + criterias);
-        return alphabeta(game.getBoard());
+        Board res = alphabeta(game.getBoard());
+        System.out.println("Node count: " + nodeCounter);
+        return res;
     }
 
     @Override
