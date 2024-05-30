@@ -83,6 +83,7 @@ public class Minimax implements AI{
 
     @Override
     public Board run(Game game) {
+        System.out.println("Running Minimax (" + depth + ")" + " for " + color + " player" + " with " + criterias);
         return minimax(game.getBoard());
     }
 

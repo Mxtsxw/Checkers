@@ -68,6 +68,7 @@ public class MonteCarloTreeSearch implements AI {
     }
 
     public Board run(Game game) {
+        System.out.println("Running MCTS (" + computationalBudget + ")" + " for " + color + " player");
         return uctSearch(game.getBoard());
     }
 

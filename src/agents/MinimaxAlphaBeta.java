@@ -85,6 +85,7 @@ public class MinimaxAlphaBeta implements AI {
 
     @Override
     public Board run(Game game) {
+        System.out.println("Running MinimaxAlphaBeta (" + depth + ")" + " for " + color + " player" + " with " + criterias);
         return alphabeta(game.getBoard());
     }
 

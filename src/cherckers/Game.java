@@ -1,5 +1,7 @@
 package cherckers;
 
+import app.CheckersApplication;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,7 +16,11 @@ public class Game {
     private List<Integer[]> validMoves;
     private List<Integer[]> validJumps;
 
-    public Game() {
+    private final CheckersApplication app;
+
+    public Game(CheckersApplication app) {
+        //
+        this.app = app;
         // Initialize the board
         init();
         // Add an ActionListener to handle board clicks
@@ -94,6 +100,8 @@ public class Game {
             if (!move(row, col)) {
                 selected = null;
                 return select(row, col);
+            } else {
+                app.humanMoveMade();
             }
         }
 
@@ -142,7 +150,6 @@ public class Game {
         validJumps = null;
         board.switchTurn();
         turn = this.board.getTurn();
-        System.out.println(this.turn);
     }
 
     private void resetHighlight() {

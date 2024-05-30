@@ -1,3 +1,5 @@
+package app;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
@@ -15,8 +17,8 @@ import cherckers.Game;
 public class CheckersApplication {
     private JFrame frame;
     private Game game;
-    private AI blackAI = new MonteCarloTreeSearch(Constants.BLACK, 100);
-    private AI redAI = new MinimaxAlphaBeta(Constants.RED, 5);
+    private AI blackAI = null;
+    private AI redAI = null;
     private final JPanel boardPanel = new JPanel(new GridLayout(Constants.ROWS, Constants.COLS));
     private final int defaultDepth = 5;
     private final int defaultIterations = 100;
@@ -39,7 +41,7 @@ public class CheckersApplication {
         boardPanel.setPreferredSize(new Dimension(Constants.WIDTH, Constants.HEIGHT));
 
         // Initialize Game
-        this.game = new Game();
+        this.game = new Game(this);
 
         // Set the Main panel
         frame.setLayout(new BorderLayout());
@@ -63,7 +65,6 @@ public class CheckersApplication {
                 JPanel criteria = (JPanel) blackPanel.criteriaPanel.getComponent(i);
                 String name = ((JLabel) criteria.getComponent(0)).getText();
                 int value = Integer.parseInt(((JTextField) criteria.getComponent(1)).getText());
-                System.out.println(name + " " + value);
                 criterias.put(name, value);
             }
             blackAI = switch ((String) blackPanel.playerSelector.getSelectedItem()) {
@@ -74,6 +75,7 @@ public class CheckersApplication {
             };
             if (blackAI != null) blackAI.setCriterias(criterias);
             updateAIInfo();
+            humanMoveMade(); // Trigger AI move
         });
 
         blackPanel.resetButton.addActionListener(e1 -> {
@@ -121,7 +123,6 @@ public class CheckersApplication {
                 JPanel criteria = (JPanel) redPanel.criteriaPanel.getComponent(i);
                 String name = ((JLabel) criteria.getComponent(0)).getText();
                 int value = Integer.parseInt(((JTextField) criteria.getComponent(1)).getText());
-                System.out.println(name + " " + value);
                 criterias.put(name, value);
             }
             redAI = switch ((String) redPanel.playerSelector.getSelectedItem()) {
@@ -132,6 +133,7 @@ public class CheckersApplication {
             };
             if (redAI != null) redAI.setCriterias(criterias);
             updateAIInfo();
+            humanMoveMade(); // Trigger AI move
         });
 
         redPanel.resetButton.addActionListener(e1 -> {
@@ -196,22 +198,65 @@ public class CheckersApplication {
 
     private void startAIPlay() {
         while (!game.isTerminal()) {
-            Board board;
+            Board board = null;
+
             if (game.getTurn().equals(Constants.BLACK)) {
-                board = blackAI.run(this.game);
+                if (blackAI != null) {
+                    board = blackAI.run(this.game);
+                } else {
+                    // Handle human player's turn for BLACK
+                    System.out.println("Black player's turn (Human)");
+                    waitForHumanMove();
+                    continue;
+                }
             } else {
-                board = redAI.run(this.game);
+                if (redAI != null) {
+                    board = redAI.run(this.game);
+                } else {
+                    // Handle human player's turn for RED
+                    System.out.println("Red player's turn (Human)");
+                    waitForHumanMove();
+                    continue;
+                }
             }
+
             game.aiMove(board);
             SwingUtilities.invokeLater(() -> {
                 game.update();
                 updateBoardPanel();
             });
+
             try {
                 Thread.sleep(1000); // Optional: Add a delay to make AI moves visible
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
+        }
+
+        // Display the winner
+        infoPanel.add(new JLabel("Winner: " + game.winner()));
+    }
+
+    // Method to wait for the human player's move
+    private void waitForHumanMove() {
+        // Implement logic to wait for the human player to make a move
+        // This could involve pausing the current thread and resuming it once the move is made
+        // For example:
+        synchronized (this) {
+            try {
+                game.enableClickEvent();
+                wait(); // Wait for the human player to make a move
+                game.disableClickEvent();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    // Call this method once the human player has made their move
+    public void humanMoveMade() {
+        synchronized (this) {
+            notify(); // Notify the waiting thread that the move has been made
         }
     }
 
