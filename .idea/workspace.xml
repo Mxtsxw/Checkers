@@ -6,10 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="ee2fbfa2-2ec6-40ed-8526-a9d72229c076" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/CheckersApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/CheckersApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/agents/Minimax.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/agents/Minimax.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/agents/MinimaxAlphaBeta.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/agents/MinimaxAlphaBeta.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/agents/MonteCarloTreeSearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/agents/MonteCarloTreeSearch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GUI/GUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GUI/GUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/CheckersApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/CheckersApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/cherckers/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cherckers/Game.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -76,6 +74,8 @@
       <workItem from="1716819280414" duration="6498000" />
       <workItem from="1716914728183" duration="14961000" />
       <workItem from="1716966866536" duration="13383000" />
+      <workItem from="1717055329670" duration="2215000" />
+      <workItem from="1717057741433" duration="10740000" />
     </task>
     <servers />
   </component>
@@ -83,6 +83,15 @@
     <option name="version" value="3" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/cherckers/Game.java</url>
+          <line>157</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
         <watch expression="game.getBoard().toString()" language="JAVA" />

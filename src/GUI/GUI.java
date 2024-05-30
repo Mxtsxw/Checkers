@@ -20,15 +20,18 @@ public class GUI extends JPanel {
     public JPanel selectionPanel;
     public JPanel criteriaPanel;
     public JPanel playerParameterPanel;
+    public JPanel container;
 
     public AI ai;
+    public String color;
 
     Map<String, Integer> criterias;
     int defaultDepth = 2;
     int defaultIterations = 100;
 
-    public GUI(AI ai) {
+    public GUI(AI ai, String color) {
         this.ai = ai;
+        this.color = color;
         this.iterationsField = new JTextField(); iterationsField.setPreferredSize(new Dimension(50, 20)); iterationsField.setText(String.valueOf(defaultIterations));
         this.depthField = new JTextField(); depthField.setPreferredSize(new Dimension(50, 20)); depthField.setText(String.valueOf(defaultDepth));
         this.playerSelector = new JComboBox<>(new String[]{"Human", "Minimax", "MinimaxAlphaBeta", "MCTS"});
@@ -53,7 +56,14 @@ public class GUI extends JPanel {
         this.criteriaPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         this.criteriaPanel.setBorder(BorderFactory.createTitledBorder("Evaluation Criteria"));
 
+        // Title Panel
+        JPanel header = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        header.add(new JLabel("Player " + this.color));
+        this.add(header, BorderLayout.NORTH);
+
         // -- Player selection panel
+
+        container = new JPanel(new BorderLayout());
 
         this.playerParameterPanel = new JPanel(new GridLayout(1, 2, 10, 10));
         updatePlayerParameterPanel("Human");
@@ -61,13 +71,15 @@ public class GUI extends JPanel {
         this.selectionPanel.add(playerSelector);
         this.selectionPanel.add(playerParameterPanel);
 
-        this.add(selectionPanel, BorderLayout.NORTH);
+        this.container.add(selectionPanel, BorderLayout.NORTH);
 
 
 
         // -- Criteria HashMap
-        this.add(criteriaPanel, BorderLayout.CENTER);
+        this.container.add(criteriaPanel, BorderLayout.CENTER);
         updateCriteriasPanel("Human");
+
+        this.add(container, BorderLayout.CENTER);
 
         // -- Reset and Validate buttons
         JPanel validationPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

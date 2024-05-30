@@ -52,7 +52,7 @@ public class CheckersApplication {
         sidePanel.setPreferredSize(new Dimension(300, Constants.HEIGHT));
 
         // Black player GUI
-        GUI blackPanel = new GUI(blackAI);
+        GUI blackPanel = new GUI(blackAI, Constants.BLACK);
         blackPanel.setPreferredSize(new Dimension(300, (Constants.HEIGHT/2)-50));
         blackPanel.playerSelector.addActionListener(e -> {
             String playerType = (String) blackPanel.playerSelector.getSelectedItem();
@@ -110,7 +110,7 @@ public class CheckersApplication {
 
 
         // Red player GUI
-        GUI redPanel = new GUI(redAI);
+        GUI redPanel = new GUI(redAI, Constants.RED);
         redPanel.setPreferredSize(new Dimension(300, (Constants.HEIGHT/2)-50));
         redPanel.playerSelector.addActionListener(e -> {
             String playerType = (String) redPanel.playerSelector.getSelectedItem();
