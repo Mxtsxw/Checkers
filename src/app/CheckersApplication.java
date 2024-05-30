@@ -220,47 +220,53 @@ public class CheckersApplication {
     }
 
     private void startAIPlay() {
-        while (!game.isTerminal()) {
-            Board board = null;
+        try {
+            while (!game.isTerminal()) {
+                Board board = null;
 
-            if (game.getTurn().equals(Constants.BLACK)) {
-                if (blackAI != null) {
-                    board = blackAI.run(this.game);
+                if (game.getTurn().equals(Constants.BLACK)) {
+                    if (blackAI != null) {
+                        board = blackAI.run(this.game);
+                    } else {
+                        // Handle human player's turn for BLACK
+                        System.out.println("Black player's turn (Human)");
+                        waitForHumanMove();
+                        continue;
+                    }
                 } else {
-                    // Handle human player's turn for BLACK
-                    System.out.println("Black player's turn (Human)");
-                    waitForHumanMove();
-                    continue;
+                    if (redAI != null) {
+                        board = redAI.run(this.game);
+                    } else {
+                        // Handle human player's turn for RED
+                        System.out.println("Red player's turn (Human)");
+                        waitForHumanMove();
+                        continue;
+                    }
                 }
-            } else {
-                if (redAI != null) {
-                    board = redAI.run(this.game);
-                } else {
-                    // Handle human player's turn for RED
-                    System.out.println("Red player's turn (Human)");
-                    waitForHumanMove();
-                    continue;
+
+                game.aiMove(board);
+                SwingUtilities.invokeLater(() -> {
+                    game.update();
+                    updateBoardPanel();
+                });
+
+                try {
+                    Thread.sleep(1000); // Optional: Add a delay to make AI moves visible
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             }
 
-            game.aiMove(board);
-            SwingUtilities.invokeLater(() -> {
-                game.update();
-                updateBoardPanel();
-            });
-
-            try {
-                Thread.sleep(1000); // Optional: Add a delay to make AI moves visible
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+            // Display the winner
+            redWins += game.winner().equals(Constants.RED) ? 1 : 0;
+            nbGames++;
+            System.out.println("Red won " + redWins + " over " + nbGames + " games");
+            resetGame();
+        } catch (Exception e) {
+            // Restart the Thread in case of an exception
+            e.printStackTrace();
+            startAIPlay();
         }
-
-        // Display the winner
-        redWins += game.winner().equals(Constants.RED) ? 1 : 0;
-        nbGames++;
-        System.out.println("Red won " + redWins + " over " + nbGames + " games");
-        resetGame();
     }
 
     // Method to wait for the human player's move
