@@ -5,12 +5,14 @@ import app.CheckersApplication;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 public class Game {
     private Piece selected;
+    private Piece locked; // For double jumps
     private String turn;
     private Board board;
     private List<Integer[]> validMoves;
@@ -94,6 +96,16 @@ public class Game {
     }
 
     public boolean select(int row, int col) {
+
+        if (locked != null) {
+            if (!move(row, col)) {
+                return false;
+            } else {
+                this.locked = null;
+                app.humanMoveMade();
+            }
+        }
+
         resetHighlight();
 
         if (selected != null) {
@@ -102,6 +114,7 @@ public class Game {
                 return select(row, col);
             } else {
                 app.humanMoveMade();
+                return true;
             }
         }
 
@@ -109,7 +122,8 @@ public class Game {
         Piece piece = tile.getOccupyingPiece();
         if (piece != null && piece.getColor().equals(turn)) {
             selected = piece;
-            validMoves = board.getValidMoves(piece);
+            if (locked != null) validMoves = new ArrayList<>();
+            else validMoves = board.getValidMoves(piece);
             validJumps = board.getValidJumps(piece);
             tile.setHighlight(true);
             validMoves.forEach(move -> board.getTile(move[0], move[1]).setHighlight(true));
@@ -136,6 +150,16 @@ public class Game {
             for (Integer[] jump : validJumps) {
                 if (Arrays.equals(jump, new Integer[]{row, col})) {
                     board.jump(selected, row, col);
+                    // Double jump
+                    validJumps = board.getValidJumps(selected);
+                    if (validJumps.size() > 0) {
+                        // Lock the selected piece and highlight the valid jumps
+                        locked = selected;
+
+                        validJumps = board.getValidJumps(locked);
+//                        validJumps.forEach(j -> board.getTile(j[0], j[1]).setHighlight(true));
+                        return true;
+                    }
                     switchTurn();
                     return true;
                 }
@@ -146,6 +170,7 @@ public class Game {
 
     private void switchTurn() {
         selected = null;
+        locked = null;
         validMoves = null;
         validJumps = null;
         board.switchTurn();

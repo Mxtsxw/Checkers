@@ -255,8 +255,13 @@ public class Board implements Cloneable {
                     Piece tempPiece = newBoard.getTile(piece.getRow(), piece.getCol()).getOccupyingPiece();
                     newBoard.jump(tempPiece, jump[0], jump[1]);
                     newBoard.count++;
-                    newBoard.turn = turn.equals(Constants.RED) ? Constants.BLACK : Constants.RED;
-                    boards.add(newBoard);
+                    // Double jump case
+                    if (newBoard.getValidJumps(tempPiece).size() > 0) {
+                        boards.addAll(newBoard.getLegalActionsByColor(color));
+                    } else {
+                        boards.add(newBoard);
+                        newBoard.turn = turn.equals(Constants.RED) ? Constants.BLACK : Constants.RED;
+                    }
                 }
             } else {
                 List<Integer[]> moves = getValidMoves(piece);

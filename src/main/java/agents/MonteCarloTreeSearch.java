@@ -2,7 +2,9 @@ package agents;
 
 import cherckers.Board;
 import cherckers.Game;
+import vizualiser.TreeViz;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -10,10 +12,19 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MonteCarloTreeSearch implements AI {
     private final String color;
     private final int computationalBudget;
+    private double explorationConstant;
+    public static boolean GENERATE_TREE_RENDER = false;
+
+    public MonteCarloTreeSearch(String color, int computationalBudget, double explorationConstant) {
+        this.color = color;
+        this.computationalBudget = computationalBudget;
+        this.explorationConstant = explorationConstant;
+    }
 
     public MonteCarloTreeSearch(String color, int computationalBudget) {
         this.color = color;
         this.computationalBudget = computationalBudget;
+        this.explorationConstant = Math.sqrt(2.0); // Use sqrt(2) as the exploration constant
     }
 
     public int evaluate(Board state) {
@@ -36,6 +47,15 @@ public class MonteCarloTreeSearch implements AI {
             backup(node, reward);
         }
 
+        if (MonteCarloTreeSearch.GENERATE_TREE_RENDER) {
+            try {
+                TreeViz treeViz = new TreeViz(rootNode);
+                treeViz.renderGraph("tree_" + color + "_" + System.currentTimeMillis() + ".png");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return rootNode.bestChild(0).getState();
     }
 
@@ -44,7 +64,7 @@ public class MonteCarloTreeSearch implements AI {
             if (!node.isFullyExpanded()) {
                 return node.expand();
             } else {
-                node = node.bestChild(Math.sqrt(2)); // Use sqrt(2) as the exploration constant
+                node = node.bestChild(explorationConstant);
             }
         }
         return node;
@@ -68,7 +88,7 @@ public class MonteCarloTreeSearch implements AI {
     }
 
     public Board run(Game game) {
-        System.out.println("Running MCTS (" + computationalBudget + ")" + " for " + color + " player");
+        System.out.println("Running MCTS (" + computationalBudget + ")" + "(c=" + explorationConstant + ")" + " for " + color + " player");
         return uctSearch(game.getBoard());
     }
 
@@ -89,7 +109,7 @@ public class MonteCarloTreeSearch implements AI {
 
     @Override
     public String toString() {
-        return "MCTS (" + computationalBudget + ")";
+        return "MCTS (" + computationalBudget + ")" + " (c=" + String.format("%.2f", explorationConstant) + ")";
     }
 }
 

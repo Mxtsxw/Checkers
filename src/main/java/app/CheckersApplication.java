@@ -15,6 +15,9 @@ import cherckers.Constants;
 import cherckers.Game;
 
 public class CheckersApplication {
+    public static int redWins;
+    public static int nbGames;
+
     private JFrame frame;
     private Game game;
     private AI blackAI = null;
@@ -24,11 +27,11 @@ public class CheckersApplication {
     private final int defaultIterations = 100;
     private final JPanel infoPanel;
     private final Map<String, Integer> defaultCriterias = Map.of(
-        "Material", 2,
-        "King", 5,
-        "Eatable", 2,
-        "Movable", 1,
-        "Win", 1000
+            "Material", 2,
+            "King", 5,
+            "Eatable", 2,
+            "Movable", 1,
+            "Win", 1000
     );
 
     public CheckersApplication() {
@@ -52,7 +55,7 @@ public class CheckersApplication {
         sidePanel.setPreferredSize(new Dimension(300, Constants.HEIGHT));
 
         // Black player GUI
-        GUI blackPanel = new GUI(blackAI);
+        GUI blackPanel = new GUI(blackAI, Constants.BLACK);
         blackPanel.setPreferredSize(new Dimension(300, (Constants.HEIGHT/2)-50));
         blackPanel.playerSelector.addActionListener(e -> {
             String playerType = (String) blackPanel.playerSelector.getSelectedItem();
@@ -61,16 +64,19 @@ public class CheckersApplication {
         });
         blackPanel.validateButton.addActionListener(e1 -> {
             Map<String, Integer> criterias = new HashMap<>();
-            for (int i = 0; i < blackPanel.criteriaPanel.getComponentCount(); i++) {
-                JPanel criteria = (JPanel) blackPanel.criteriaPanel.getComponent(i);
-                String name = ((JLabel) criteria.getComponent(0)).getText();
-                int value = Integer.parseInt(((JTextField) criteria.getComponent(1)).getText());
-                criterias.put(name, value);
+            // Minimax and MinimaxAlphaBeta
+            if (blackPanel.playerSelector.getSelectedItem().equals("Minimax") || blackPanel.playerSelector.getSelectedItem().equals("MinimaxAlphaBeta")) {
+                for (int i = 0; i < blackPanel.criteriaPanel.getComponentCount(); i++) {
+                    JPanel criteria = (JPanel) blackPanel.criteriaPanel.getComponent(i);
+                    String name = ((JLabel) criteria.getComponent(0)).getText();
+                    int value = Integer.parseInt(((JTextField) criteria.getComponent(1)).getText());
+                    criterias.put(name, value);
+                }
             }
             blackAI = switch ((String) blackPanel.playerSelector.getSelectedItem()) {
                 case "Minimax" -> new Minimax(Constants.BLACK, Integer.parseInt(blackPanel.depthField.getText()));
                 case "MinimaxAlphaBeta" -> new MinimaxAlphaBeta(Constants.BLACK, Integer.parseInt(blackPanel.depthField.getText()));
-                case "MCTS" -> new MonteCarloTreeSearch(Constants.BLACK, Integer.parseInt(blackPanel.iterationsField.getText()));
+                case "MCTS" -> new MonteCarloTreeSearch(Constants.BLACK, Integer.parseInt(blackPanel.iterationsField.getText()), Double.parseDouble(blackPanel.explorationConstantField.getText()));
                 default -> null;
             };
             if (blackAI != null) blackAI.setCriterias(criterias);
@@ -95,7 +101,9 @@ public class CheckersApplication {
                 case "MCTS" -> blackPanel.iterationsField.setText(String.valueOf(defaultIterations));
             }
         });
-
+        blackPanel.treeRenderCheckbox.addActionListener(e -> {
+            MonteCarloTreeSearch.GENERATE_TREE_RENDER = blackPanel.treeRenderCheckbox.isSelected();
+        });
         sidePanel.add(blackPanel);
 
         // Info Panel
@@ -110,7 +118,7 @@ public class CheckersApplication {
 
 
         // Red player GUI
-        GUI redPanel = new GUI(redAI);
+        GUI redPanel = new GUI(redAI, Constants.RED);
         redPanel.setPreferredSize(new Dimension(300, (Constants.HEIGHT/2)-50));
         redPanel.playerSelector.addActionListener(e -> {
             String playerType = (String) redPanel.playerSelector.getSelectedItem();
@@ -119,16 +127,18 @@ public class CheckersApplication {
         });
         redPanel.validateButton.addActionListener(e1 -> {
             Map<String, Integer> criterias = new HashMap<>();
-            for (int i = 0; i < redPanel.criteriaPanel.getComponentCount(); i++) {
-                JPanel criteria = (JPanel) redPanel.criteriaPanel.getComponent(i);
-                String name = ((JLabel) criteria.getComponent(0)).getText();
-                int value = Integer.parseInt(((JTextField) criteria.getComponent(1)).getText());
-                criterias.put(name, value);
+            if (redPanel.playerSelector.getSelectedItem().equals("Minimax") || redPanel.playerSelector.getSelectedItem().equals("MinimaxAlphaBeta")) {
+                for (int i = 0; i < redPanel.criteriaPanel.getComponentCount(); i++) {
+                    JPanel criteria = (JPanel) redPanel.criteriaPanel.getComponent(i);
+                    String name = ((JLabel) criteria.getComponent(0)).getText();
+                    int value = Integer.parseInt(((JTextField) criteria.getComponent(1)).getText());
+                    criterias.put(name, value);
+                }
             }
             redAI = switch ((String) redPanel.playerSelector.getSelectedItem()) {
                 case "Minimax" -> new Minimax(Constants.RED, Integer.parseInt(redPanel.depthField.getText()));
                 case "MinimaxAlphaBeta" -> new MinimaxAlphaBeta(Constants.RED, Integer.parseInt(redPanel.depthField.getText()));
-                case "MCTS" -> new MonteCarloTreeSearch(Constants.RED, Integer.parseInt(redPanel.iterationsField.getText()));
+                case "MCTS" -> new MonteCarloTreeSearch(Constants.RED, Integer.parseInt(redPanel.iterationsField.getText()), Double.parseDouble(redPanel.explorationConstantField.getText()));
                 default -> null;
             };
             if (redAI != null) redAI.setCriterias(criterias);
@@ -153,6 +163,9 @@ public class CheckersApplication {
                 case "MCTS" -> redPanel.iterationsField.setText(String.valueOf(defaultIterations));
             }
         });
+        redPanel.treeRenderCheckbox.addActionListener(e -> {
+            MonteCarloTreeSearch.GENERATE_TREE_RENDER = redPanel.treeRenderCheckbox.isSelected();
+        });
         sidePanel.add(redPanel);
 
 
@@ -171,6 +184,16 @@ public class CheckersApplication {
 
         // Start AI turns in a separate thread
         new Thread(this::startAIPlay).start();
+    }
+
+    public void resetGame(){
+        this.game = new Game(this);
+        updateBoardPanel();
+        this.frame.revalidate();
+        this.frame.repaint();
+        // Start AI turns in a separate thread
+        new Thread(this::startAIPlay).start();
+
     }
 
     private void updateAIInfo() {
@@ -197,44 +220,53 @@ public class CheckersApplication {
     }
 
     private void startAIPlay() {
-        while (!game.isTerminal()) {
-            Board board = null;
+        try {
+            while (!game.isTerminal()) {
+                Board board = null;
 
-            if (game.getTurn().equals(Constants.BLACK)) {
-                if (blackAI != null) {
-                    board = blackAI.run(this.game);
+                if (game.getTurn().equals(Constants.BLACK)) {
+                    if (blackAI != null) {
+                        board = blackAI.run(this.game);
+                    } else {
+                        // Handle human player's turn for BLACK
+                        System.out.println("Black player's turn (Human)");
+                        waitForHumanMove();
+                        continue;
+                    }
                 } else {
-                    // Handle human player's turn for BLACK
-                    System.out.println("Black player's turn (Human)");
-                    waitForHumanMove();
-                    continue;
+                    if (redAI != null) {
+                        board = redAI.run(this.game);
+                    } else {
+                        // Handle human player's turn for RED
+                        System.out.println("Red player's turn (Human)");
+                        waitForHumanMove();
+                        continue;
+                    }
                 }
-            } else {
-                if (redAI != null) {
-                    board = redAI.run(this.game);
-                } else {
-                    // Handle human player's turn for RED
-                    System.out.println("Red player's turn (Human)");
-                    waitForHumanMove();
-                    continue;
+
+                game.aiMove(board);
+                SwingUtilities.invokeLater(() -> {
+                    game.update();
+                    updateBoardPanel();
+                });
+
+                try {
+                    Thread.sleep(1000); // Optional: Add a delay to make AI moves visible
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             }
 
-            game.aiMove(board);
-            SwingUtilities.invokeLater(() -> {
-                game.update();
-                updateBoardPanel();
-            });
-
-            try {
-                Thread.sleep(1000); // Optional: Add a delay to make AI moves visible
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
+            // Display the winner
+            redWins += game.winner().equals(Constants.RED) ? 1 : 0;
+            nbGames++;
+            System.out.println("Red won " + redWins + " over " + nbGames + " games");
+            resetGame();
+        } catch (Exception e) {
+            // Restart the Thread in case of an exception
+            e.printStackTrace();
+            startAIPlay();
         }
-
-        // Display the winner
-        infoPanel.add(new JLabel("Winner: " + game.winner()));
     }
 
     // Method to wait for the human player's move
