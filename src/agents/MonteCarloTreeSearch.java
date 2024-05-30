@@ -10,10 +10,18 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MonteCarloTreeSearch implements AI {
     private final String color;
     private final int computationalBudget;
+    private double explorationConstant;
+
+    public MonteCarloTreeSearch(String color, int computationalBudget, double explorationConstant) {
+        this.color = color;
+        this.computationalBudget = computationalBudget;
+        this.explorationConstant = explorationConstant;
+    }
 
     public MonteCarloTreeSearch(String color, int computationalBudget) {
         this.color = color;
         this.computationalBudget = computationalBudget;
+        this.explorationConstant = Math.sqrt(2.0); // Use sqrt(2) as the exploration constant
     }
 
     public int evaluate(Board state) {
@@ -44,7 +52,7 @@ public class MonteCarloTreeSearch implements AI {
             if (!node.isFullyExpanded()) {
                 return node.expand();
             } else {
-                node = node.bestChild(Math.sqrt(2)); // Use sqrt(2) as the exploration constant
+                node = node.bestChild(explorationConstant);
             }
         }
         return node;
