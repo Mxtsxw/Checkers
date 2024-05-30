@@ -22,6 +22,7 @@ public class GUI extends JPanel {
     public JPanel criteriaPanel;
     public JPanel playerParameterPanel;
     public JPanel container;
+    public JCheckBox treeRenderCheckbox;
 
     public AI ai;
     public String color;
@@ -40,6 +41,7 @@ public class GUI extends JPanel {
         this.playerSelector = new JComboBox<>(new String[]{"Human", "Minimax", "MinimaxAlphaBeta", "MCTS"});
         this.resetButton = new JButton("Reset");
         this.validateButton = new JButton("Validate");
+        this.treeRenderCheckbox = new JCheckBox("Render Tree");
 
         this.criterias = Map.of(
                 "Material", 2,
@@ -135,6 +137,10 @@ public class GUI extends JPanel {
                 JPanel div = new JPanel(new GridLayout(1, 2, 10, 10));
                 div.add(new JLabel("Exploration Constant"));
                 div.add(explorationConstantField);
+
+                // Add checkboxes for rendering tree
+                criteriaPanel.add(treeRenderCheckbox);
+
                 criteriaPanel.add(div);
                 break;
         }

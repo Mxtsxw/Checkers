@@ -2,7 +2,9 @@ package agents;
 
 import cherckers.Board;
 import cherckers.Game;
+import vizualiser.TreeViz;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
@@ -11,6 +13,7 @@ public class MonteCarloTreeSearch implements AI {
     private final String color;
     private final int computationalBudget;
     private double explorationConstant;
+    public static boolean GENERATE_TREE_RENDER = false;
 
     public MonteCarloTreeSearch(String color, int computationalBudget, double explorationConstant) {
         this.color = color;
@@ -44,6 +47,15 @@ public class MonteCarloTreeSearch implements AI {
             backup(node, reward);
         }
 
+        if (MonteCarloTreeSearch.GENERATE_TREE_RENDER) {
+            try {
+                TreeViz treeViz = new TreeViz(rootNode);
+                treeViz.renderGraph("tree_" + color + "_" + System.currentTimeMillis() + ".png");
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         return rootNode.bestChild(0).getState();
     }
 

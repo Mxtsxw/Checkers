@@ -100,7 +100,9 @@ public class CheckersApplication {
                 case "MCTS" -> blackPanel.iterationsField.setText(String.valueOf(defaultIterations));
             }
         });
-
+        blackPanel.treeRenderCheckbox.addActionListener(e -> {
+            MonteCarloTreeSearch.GENERATE_TREE_RENDER = blackPanel.treeRenderCheckbox.isSelected();
+        });
         sidePanel.add(blackPanel);
 
         // Info Panel
@@ -159,6 +161,9 @@ public class CheckersApplication {
                 case "Minimax", "MinimaxAlphaBeta" -> redPanel.depthField.setText(String.valueOf(defaultDepth));
                 case "MCTS" -> redPanel.iterationsField.setText(String.valueOf(defaultIterations));
             }
+        });
+        redPanel.treeRenderCheckbox.addActionListener(e -> {
+            MonteCarloTreeSearch.GENERATE_TREE_RENDER = redPanel.treeRenderCheckbox.isSelected();
         });
         sidePanel.add(redPanel);
 
