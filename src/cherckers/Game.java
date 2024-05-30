@@ -112,6 +112,9 @@ public class Game {
             if (!move(row, col)) {
                 selected = null;
                 return select(row, col);
+            } else {
+                app.humanMoveMade();
+                return true;
             }
         }
 
