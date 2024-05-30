@@ -12,6 +12,7 @@ public class GUI extends JPanel {
     // Elementary components
     public JTextField depthField;
     public JTextField iterationsField;
+    public JTextField explorationConstantField;
     public JComboBox<String> playerSelector;
     public JButton resetButton;
     public JButton validateButton;
@@ -28,11 +29,13 @@ public class GUI extends JPanel {
     Map<String, Integer> criterias;
     int defaultDepth = 2;
     int defaultIterations = 100;
+    double defaultExplorationConstant = Math.sqrt(2);
 
     public GUI(AI ai, String color) {
         this.ai = ai;
         this.color = color;
         this.iterationsField = new JTextField(); iterationsField.setPreferredSize(new Dimension(50, 20)); iterationsField.setText(String.valueOf(defaultIterations));
+        this.explorationConstantField = new JTextField(); explorationConstantField.setPreferredSize(new Dimension(50, 20)); explorationConstantField.setText(String.valueOf(defaultExplorationConstant));
         this.depthField = new JTextField(); depthField.setPreferredSize(new Dimension(50, 20)); depthField.setText(String.valueOf(defaultDepth));
         this.playerSelector = new JComboBox<>(new String[]{"Human", "Minimax", "MinimaxAlphaBeta", "MCTS"});
         this.resetButton = new JButton("Reset");
@@ -113,16 +116,29 @@ public class GUI extends JPanel {
     public void updateCriteriasPanel(String playerType){
         criteriaPanel.removeAll();
         criteriaPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        for (String criteria : criterias.keySet()) {
-            JPanel div = new JPanel(new GridLayout(1, 2, 10, 10));
-            div.add(new JLabel(criteria));
-            JTextField field = new JTextField();
-            field.setPreferredSize(new Dimension(50, 20));
-            field.setText(String.valueOf(criterias.get(criteria)));
-            div.add(field);
-            this.criteriaPanel.add(div);
+        switch (playerType){
+            case "Human":
+                break;
+            case "Minimax", "MinimaxAlphaBeta":
+                for (String criteria : criterias.keySet()) {
+                    JPanel div = new JPanel(new GridLayout(1, 2, 10, 10));
+                    div.add(new JLabel(criteria));
+                    JTextField field = new JTextField();
+                    field.setPreferredSize(new Dimension(50, 20));
+                    field.setText(String.valueOf(criterias.get(criteria)));
+                    div.add(field);
+                    this.criteriaPanel.add(div);
+                }
+                break;
+            case "MCTS":
+                criteriaPanel.setLayout(new FlowLayout());
+                JPanel div = new JPanel(new GridLayout(1, 2, 10, 10));
+                div.add(new JLabel("Exploration Constant"));
+                div.add(explorationConstantField);
+                criteriaPanel.add(div);
+                break;
         }
-        criteriaPanel.setVisible(playerType.equals("Minimax") || playerType.equals("MinimaxAlphaBeta"));
+        criteriaPanel.setVisible(playerType.equals("Minimax") || playerType.equals("MinimaxAlphaBeta") || playerType.equals("MCTS"));
         this.revalidate();
         this.repaint();
     }

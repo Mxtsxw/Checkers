@@ -61,16 +61,19 @@ public class CheckersApplication {
         });
         blackPanel.validateButton.addActionListener(e1 -> {
             Map<String, Integer> criterias = new HashMap<>();
-            for (int i = 0; i < blackPanel.criteriaPanel.getComponentCount(); i++) {
-                JPanel criteria = (JPanel) blackPanel.criteriaPanel.getComponent(i);
-                String name = ((JLabel) criteria.getComponent(0)).getText();
-                int value = Integer.parseInt(((JTextField) criteria.getComponent(1)).getText());
-                criterias.put(name, value);
+            // Minimax and MinimaxAlphaBeta
+            if (blackPanel.playerSelector.getSelectedItem().equals("Minimax") || blackPanel.playerSelector.getSelectedItem().equals("MinimaxAlphaBeta")) {
+                for (int i = 0; i < blackPanel.criteriaPanel.getComponentCount(); i++) {
+                    JPanel criteria = (JPanel) blackPanel.criteriaPanel.getComponent(i);
+                    String name = ((JLabel) criteria.getComponent(0)).getText();
+                    int value = Integer.parseInt(((JTextField) criteria.getComponent(1)).getText());
+                    criterias.put(name, value);
+                }
             }
             blackAI = switch ((String) blackPanel.playerSelector.getSelectedItem()) {
                 case "Minimax" -> new Minimax(Constants.BLACK, Integer.parseInt(blackPanel.depthField.getText()));
                 case "MinimaxAlphaBeta" -> new MinimaxAlphaBeta(Constants.BLACK, Integer.parseInt(blackPanel.depthField.getText()));
-                case "MCTS" -> new MonteCarloTreeSearch(Constants.BLACK, Integer.parseInt(blackPanel.iterationsField.getText()));
+                case "MCTS" -> new MonteCarloTreeSearch(Constants.BLACK, Integer.parseInt(blackPanel.iterationsField.getText()), Double.parseDouble(blackPanel.explorationConstantField.getText()));
                 default -> null;
             };
             if (blackAI != null) blackAI.setCriterias(criterias);
@@ -119,16 +122,18 @@ public class CheckersApplication {
         });
         redPanel.validateButton.addActionListener(e1 -> {
             Map<String, Integer> criterias = new HashMap<>();
-            for (int i = 0; i < redPanel.criteriaPanel.getComponentCount(); i++) {
-                JPanel criteria = (JPanel) redPanel.criteriaPanel.getComponent(i);
-                String name = ((JLabel) criteria.getComponent(0)).getText();
-                int value = Integer.parseInt(((JTextField) criteria.getComponent(1)).getText());
-                criterias.put(name, value);
+            if (redPanel.playerSelector.getSelectedItem().equals("Minimax") || redPanel.playerSelector.getSelectedItem().equals("MinimaxAlphaBeta")) {
+                for (int i = 0; i < redPanel.criteriaPanel.getComponentCount(); i++) {
+                    JPanel criteria = (JPanel) redPanel.criteriaPanel.getComponent(i);
+                    String name = ((JLabel) criteria.getComponent(0)).getText();
+                    int value = Integer.parseInt(((JTextField) criteria.getComponent(1)).getText());
+                    criterias.put(name, value);
+                }
             }
             redAI = switch ((String) redPanel.playerSelector.getSelectedItem()) {
                 case "Minimax" -> new Minimax(Constants.RED, Integer.parseInt(redPanel.depthField.getText()));
                 case "MinimaxAlphaBeta" -> new MinimaxAlphaBeta(Constants.RED, Integer.parseInt(redPanel.depthField.getText()));
-                case "MCTS" -> new MonteCarloTreeSearch(Constants.RED, Integer.parseInt(redPanel.iterationsField.getText()));
+                case "MCTS" -> new MonteCarloTreeSearch(Constants.RED, Integer.parseInt(redPanel.iterationsField.getText()), Double.parseDouble(redPanel.explorationConstantField.getText()));
                 default -> null;
             };
             if (redAI != null) redAI.setCriterias(criterias);

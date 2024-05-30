@@ -76,7 +76,7 @@ public class MonteCarloTreeSearch implements AI {
     }
 
     public Board run(Game game) {
-        System.out.println("Running MCTS (" + computationalBudget + ")" + " for " + color + " player");
+        System.out.println("Running MCTS (" + computationalBudget + ")" + "(c=" + explorationConstant + ")" + " for " + color + " player");
         return uctSearch(game.getBoard());
     }
 
@@ -97,7 +97,7 @@ public class MonteCarloTreeSearch implements AI {
 
     @Override
     public String toString() {
-        return "MCTS (" + computationalBudget + ")";
+        return "MCTS (" + computationalBudget + ")" + " (c=" + String.format("%.2f", explorationConstant) + ")";
     }
 }
 
