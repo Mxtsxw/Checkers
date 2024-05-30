@@ -20,20 +20,21 @@ public class CheckersApplication {
 
     private JFrame frame;
     private Game game;
-    private AI blackAI;
-    private AI redAI;
+    private AI blackAI = null;
+    private AI redAI = null;
     private final JPanel boardPanel = new JPanel(new GridLayout(Constants.ROWS, Constants.COLS));
-    private final int defaultDepth;
-    private final int defaultIterations;
+    private final int defaultDepth = 5;
+    private final int defaultIterations = 100;
     private final JPanel infoPanel;
-    private final Map<String, Integer> defaultCriterias;
+    private final Map<String, Integer> defaultCriterias = Map.of(
+            "Material", 2,
+            "King", 5,
+            "Eatable", 2,
+            "Movable", 1,
+            "Win", 1000
+    );
 
-    public CheckersApplication(AI _blackAI, AI _redAI,int _defaultDepth,int _defaultIterations, Map<String, Integer> _defaultCriterias) {
-        this.defaultCriterias = _defaultCriterias;
-        this.defaultDepth=_defaultDepth;
-        this.defaultIterations=_defaultIterations;
-        this.blackAI=_blackAI;
-        this.redAI=_redAI;
+    public CheckersApplication() {
         // Create the main frame
         frame = new JFrame("Checkers Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -249,18 +250,16 @@ public class CheckersApplication {
             });
 
             try {
-                Thread.sleep(100); // Optional: Add a delay to make AI moves visible
+                Thread.sleep(1000); // Optional: Add a delay to make AI moves visible
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
         }
 
         // Display the winner
-        infoPanel.add(new JLabel("Winner: " + game.winner()));
         redWins += game.winner().equals(Constants.RED) ? 1 : 0;
-        nbGames +=1;
-        System.out.println("redwins : " + redWins);
-        System.out.println("nbGames : " + nbGames);
+        nbGames++;
+        System.out.println("Red won " + redWins + " over " + nbGames + " games");
         resetGame();
     }
 
@@ -288,17 +287,7 @@ public class CheckersApplication {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new CheckersApplication(
-                null,null,5,100,Map.of(
-                        "Material", 2,
-                        "King", 5,
-                        "Eatable", 2,
-                        "Movable", 1,
-                        "Win", 1000
-                    )
-                );
-        });
+        SwingUtilities.invokeLater(CheckersApplication::new);
     }
 
 }
