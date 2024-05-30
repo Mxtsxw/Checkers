@@ -15,23 +15,25 @@ import cherckers.Constants;
 import cherckers.Game;
 
 public class CheckersApplication {
+    public static int redWins;
+    public static int nbGames;
+
     private JFrame frame;
     private Game game;
-    private AI blackAI = null;
-    private AI redAI = null;
+    private AI blackAI;
+    private AI redAI;
     private final JPanel boardPanel = new JPanel(new GridLayout(Constants.ROWS, Constants.COLS));
-    private final int defaultDepth = 5;
-    private final int defaultIterations = 100;
+    private final int defaultDepth;
+    private final int defaultIterations;
     private final JPanel infoPanel;
-    private final Map<String, Integer> defaultCriterias = Map.of(
-        "Material", 2,
-        "King", 5,
-        "Eatable", 2,
-        "Movable", 1,
-        "Win", 1000
-    );
+    private final Map<String, Integer> defaultCriterias;
 
-    public CheckersApplication() {
+    public CheckersApplication(AI _blackAI, AI _redAI,int _defaultDepth,int _defaultIterations, Map<String, Integer> _defaultCriterias) {
+        this.defaultCriterias = _defaultCriterias;
+        this.defaultDepth=_defaultDepth;
+        this.defaultIterations=_defaultIterations;
+        this.blackAI=_blackAI;
+        this.redAI=_redAI;
         // Create the main frame
         frame = new JFrame("Checkers Game");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -178,6 +180,16 @@ public class CheckersApplication {
         new Thread(this::startAIPlay).start();
     }
 
+    public void resetGame(){
+        this.game = new Game(this);
+        updateBoardPanel();
+        this.frame.revalidate();
+        this.frame.repaint();
+        // Start AI turns in a separate thread
+        new Thread(this::startAIPlay).start();
+
+    }
+
     private void updateAIInfo() {
         System.out.println("Update AI Info");
         ((JLabel) this.infoPanel.getComponent(0)).setText("AI Black : " + blackAI);
@@ -232,7 +244,7 @@ public class CheckersApplication {
             });
 
             try {
-                Thread.sleep(1000); // Optional: Add a delay to make AI moves visible
+                Thread.sleep(100); // Optional: Add a delay to make AI moves visible
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -240,6 +252,11 @@ public class CheckersApplication {
 
         // Display the winner
         infoPanel.add(new JLabel("Winner: " + game.winner()));
+        redWins += game.winner().equals(Constants.RED) ? 1 : 0;
+        nbGames +=1;
+        System.out.println("redwins : " + redWins);
+        System.out.println("nbGames : " + nbGames);
+        resetGame();
     }
 
     // Method to wait for the human player's move
@@ -266,7 +283,17 @@ public class CheckersApplication {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(CheckersApplication::new);
+        SwingUtilities.invokeLater(() -> {
+            new CheckersApplication(
+                null,null,5,100,Map.of(
+                        "Material", 2,
+                        "King", 5,
+                        "Eatable", 2,
+                        "Movable", 1,
+                        "Win", 1000
+                    )
+                );
+        });
     }
 
 }
