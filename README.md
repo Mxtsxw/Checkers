@@ -71,7 +71,7 @@ The MCTS heuristic shows a higher win rate, making it well-suited for Checkers d
 
 - Development Skills in Java
 - GUI Development using Swing
-- Deep Understanding of AI Algorithms
+- Deep Understanding of Game AI Algorithms
   - Minimax
   - Alpha-Beta Pruning
   - Monte-Carlo Tree Search (MCTS)
